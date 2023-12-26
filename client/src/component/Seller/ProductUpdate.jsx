@@ -7,7 +7,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-// import Cloudinary from "../Cloudinary";
+
 
 const ProductUpdate=() =>{
   const [oneProduct,SetOneProduct]=useState([])
@@ -38,8 +38,6 @@ console.log(id)
   return (
     <>
       <div className="divP">
-      <TopHeader/>
-      {/* <Cloudinary/> */}
         <div className="divProduct23">
           
           <div className="divProduct28">
@@ -83,47 +81,8 @@ console.log(id)
                   <div className="divProduct44" />
                   
                   
-                  <div className="divProduct57">
-                    
-                    <div className="divProduct60"><div className="buyBtn">Buy Now</div></div>
-                    <img
-                      loading="lazy"
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec08a593d461e728db2a3e431df9e075d5f9912126c045dc62171b9ec6894644?"
-                      className="imgProduct14"
-                    />
-                  </div>
-                  <div className="divProduct61">
-                    <div className="divProduct62">
-                      <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/b4550074645e51a42aca1953c2a07533a677b1016164bd0048a3a97ea8722833?"
-                        className="imgProduct15"
-                      />
-                      <div className="divProduct63">
-                        <div className="divProduct64">Free Delivery</div>
-                        <div className="divProduct65">
-                          Enter your postal code for Delivery Availability
-                        </div>
-                      </div>
-                    </div>
-                    <div className="divProduct66" />
-                    <div className="divProduct67">
-                      <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/90a8842bc3d9920ea195b68825a420da192397e7504a3a1fec5c41ab12315e5e?"
-                        className="imgProduct16"
-                      />
-                      <div className="divProduct68">
-                        <div className="divProduct69">Return Delivery</div>
-                        <div className="divProduct70">
-                          Free 30 Days Delivery Returns.{" "}
-                          <span style={{ textDecoration: "underline" }}>
-                            Details
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  
+                
                 </div>
               </div>
             </div>
