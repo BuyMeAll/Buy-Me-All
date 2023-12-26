@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Grid,
@@ -16,43 +16,84 @@ import "./profile.css"
 import TopHeader from "../Top Header/TopHeader.jsx";
 import Header from "../Header/Header.jsx";
 import Footer from "../Footer/Footer.jsx";
+import axios from 'axios';
 
-const Profile = () => {
-  const fileInputRef = useRef(null);
-  const [fullName, setFirstName] = useState('');
+const Profile = ({user}) => {
+ 
+  const [showPassword, setShowPassword] = useState(false);
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [previousPassword, setPreviousPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [photo, setPhoto] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  });
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission logic here
+  const [cancel,setcancel]=useState(false)
+  const id =(user===null)?0:user.id
+  
+const handleUpdateProfile = async () => {
+  const profileToUpdate = {
+    user_name:fullName,
+    user_phOrEmail:email,
+    user_password:newPassword,
+    user_img:photo
+    }
+    try {
+      const update = await axios.put(`http://localhost:3000/api/BuyMeAll/users/43`, profileToUpdate);
+      console.log("Profile updated successfully", update.data);
+      alert("Profile updated successfully");
+    } catch (error) {
+      console.log('Error updating profile:', error);
+      alert("Update operation failed");
+    }
   };
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const handleClickCancel = () => {
-    // Handle cancel logic here
+    setFullName('');
+    setEmail('');
+    setPreviousPassword('');
+    setNewPassword('');
+    setPhoto(null);
   };
 
-  const handleImageChange = (event) => {
-    setPhoto(event.target.files[0]);
+  const handleImageChange = async (e) => {
+    const file = e
+    const form = new FormData();
+    form.append('file', file);
+    form.append('upload_preset', 'patient');
+
+    try {
+      const response = await axios.post(
+        'https://api.cloudinary.com/v1_1/dodim9flq/image/upload',
+        form,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      const imageUrl = response.data.secure_url;
+      console.log(imageUrl);
+      setPhoto(imageUrl);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -69,40 +110,53 @@ const Profile = () => {
           <input
             accept="image/*"
             type="file"
-            onChange={handleImageChange}
-            ref={fileInputRef}
             style={{ display: 'none' }}
+
           />
           
             <img
-              src="https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?w=2000"
+              src={photo}
               alt="Profile Photo"
               style={{ width: '250px', borderRadius: '50%', objectFit: 'cover' }}
             />
           
-          <Button
-            component="label"
-            sx={{
-              bgcolor: 'rgba(255, 0, 0, 0.8)',
-              color: 'white',
-              '&:hover': { bgcolor: 'white', color: 'rgba(255, 0, 0, 0.9)' },
-            }}
-            startIcon={<PhotoCamera />}
-            onClick={() => fileInputRef.current.click()}
-          >
-            Upload Photo
-            <VisuallyHiddenInput type="file" />
-          </Button>
+          <div className="input-div">
+              <label className="file-label">
+                <input
+                  className="input"
+                  name="picture"
+                  type="file"
+                  onChange={(e)=>{handleImageChange(e.target.files[0])}}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  fill="none"
+                  stroke="currentColor"
+                  className="icon"
+                >
+                  <polyline points="16 16 12 12 8 16"></polyline>
+                  <line y2="21" x2="12" y1="12" x1="12"></line>
+                  <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+                  <polyline points="16 16 12 12 8 16"></polyline>
+                </svg>
+              </label>
+            </div>
         </div>
         <div className="profileEditInfo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: '20px' ,width:'30%' }}>
           <Grid item xs={5} sm={5}>
-            <form onSubmit={handleSubmit}>
+            <form >
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <TextField
                     label="Full Name"
                     value={fullName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => setFullName(e.target.value)}
                     fullWidth
                     required
                   />
@@ -154,7 +208,7 @@ const Profile = () => {
                   />
                 </Grid>
                 <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '80px' }}>
-                  <Button item xs={12} type="submit" variant="contained" color="success">
+                  <Button item xs={12} type="submit" variant="contained" color="success" onClick={()=>{handleUpdateProfile()}}>
                     Save
                   </Button>
                   <Button item xs={12} onClick={handleClickCancel} variant="outlined" color="error" >
