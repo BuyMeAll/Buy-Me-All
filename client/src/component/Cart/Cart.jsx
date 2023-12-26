@@ -36,7 +36,8 @@ const Cart=({taktak,user})=> {
   })
   })
   localStorage.removeItem("basket")
-  navigate('/OrderPass')
+  alert("thanks for your purchase")
+  navigate('/')
  }
   return (
     <>

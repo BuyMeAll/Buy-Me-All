@@ -4,7 +4,7 @@ const { AllOrders,AddOrders,UpdateStatus } = require('../controllers/orders.cont
 
 
 ordersRouter.get('/orders',AllOrders)
-ordersRouter.post('/orders/:id',AddOrders)
+ordersRouter.post('/orders',AddOrders)
 ordersRouter.put('/orders/:id',UpdateStatus)
 
 
